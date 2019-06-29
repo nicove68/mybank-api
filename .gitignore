@@ -1,0 +1,14 @@
+.git
+.classpath
+.gradle
+.project
+.settings
+./bin
+gradle
+.DS_Store
+build
+/target/
+node_modules
+.idea
+*.iml
+.DS_Store
