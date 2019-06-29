@@ -1,6 +1,7 @@
 package com.mybank.api.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.mybank.api.dao.model.BankAccount;
 import com.mybank.api.dao.repository.BankAccountRepository;
+import com.mybank.api.exception.ResourceNotFoundException;
 import com.mybank.api.model.dto.bankaccount.GETBankAccountDTO;
 import com.mybank.api.model.dto.bankaccount.POSTBankAccountDTO;
 import com.mybank.api.transformer.BankAccountTransformer;
@@ -33,6 +35,17 @@ public class BankAccountService {
     List<BankAccount> bankAccountList = bankAccountRepository.findAll();
 
     return bankAccountList.stream().map(bankAccountTransformer::convertToDto).collect(Collectors.toList());
+  }
+
+  public GETBankAccountDTO getBankAccount(Long bankAccountId) {
+    LOGGER.info("Find bank account with id: " + bankAccountId);
+
+    Optional<BankAccount> bankAccount = bankAccountRepository.findBankAccountById(bankAccountId);
+
+    if (!bankAccount.isPresent())
+      throw new ResourceNotFoundException();
+
+    return bankAccountTransformer.convertToDto(bankAccount.get());
   }
 
   public GETBankAccountDTO createBankAccount(POSTBankAccountDTO postBankAccountDTO) {

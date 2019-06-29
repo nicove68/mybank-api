@@ -28,6 +28,12 @@ public class BankAccountController extends BaseController {
     return bankAccountService.getAllBankAccounts();
   }
 
+  @GetMapping(value = "{bankAccountId}")
+  public GETBankAccountDTO getBankAccount(@PathVariable Long bankAccountId) {
+
+    return bankAccountService.getBankAccount(bankAccountId);
+  }
+
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public GETBankAccountDTO createBankAccount(@RequestBody POSTBankAccountDTO body) {

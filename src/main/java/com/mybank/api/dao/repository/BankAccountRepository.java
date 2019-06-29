@@ -7,8 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.mybank.api.dao.model.BankAccount;
 
-public interface BankAccountRepository extends CrudRepository<BankAccount, String> {
+public interface BankAccountRepository extends CrudRepository<BankAccount, Long> {
 
-  Optional<BankAccount> findBankAccountById(String bankAccountId);
+  Optional<BankAccount> findBankAccountById(Long bankAccountId);
   List<BankAccount> findAll();
 }
