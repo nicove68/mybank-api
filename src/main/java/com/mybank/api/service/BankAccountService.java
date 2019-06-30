@@ -14,7 +14,9 @@ import com.mybank.api.dao.repository.BankAccountRepository;
 import com.mybank.api.exception.ResourceNotFoundException;
 import com.mybank.api.model.dto.bankaccount.GETBankAccountDTO;
 import com.mybank.api.model.dto.bankaccount.POSTBankAccountDTO;
+import com.mybank.api.model.dto.bankbalance.GETBankBalanceDTO;
 import com.mybank.api.transformer.BankAccountTransformer;
+import com.mybank.api.transformer.BankBalanceTransformer;
 
 @Service
 public class BankAccountService {
@@ -22,11 +24,13 @@ public class BankAccountService {
   private static Logger LOGGER = LoggerFactory.getLogger(BankAccountService.class);
   private BankAccountRepository bankAccountRepository;
   private BankAccountTransformer bankAccountTransformer;
+  private BankBalanceTransformer bankBalanceTransformer;
 
   @Autowired
-  public BankAccountService(BankAccountRepository bankAccountRepository, BankAccountTransformer bankAccountTransformer) {
+  public BankAccountService(BankAccountRepository bankAccountRepository, BankAccountTransformer bankAccountTransformer, BankBalanceTransformer bankBalanceTransformer) {
     this.bankAccountRepository = bankAccountRepository;
     this.bankAccountTransformer = bankAccountTransformer;
+    this.bankBalanceTransformer = bankBalanceTransformer;
   }
 
   public List<GETBankAccountDTO> getAllBankAccounts() {
@@ -38,14 +42,10 @@ public class BankAccountService {
   }
 
   public GETBankAccountDTO getBankAccount(Long bankAccountId) {
-    LOGGER.info("Find bank account with id: " + bankAccountId);
 
-    Optional<BankAccount> bankAccount = bankAccountRepository.findBankAccountById(bankAccountId);
+    BankAccount bankAccount = getBankAccountFromRepository(bankAccountId);
 
-    if (!bankAccount.isPresent())
-      throw new ResourceNotFoundException();
-
-    return bankAccountTransformer.convertToDto(bankAccount.get());
+    return bankAccountTransformer.convertToDto(bankAccount);
   }
 
   public GETBankAccountDTO createBankAccount(POSTBankAccountDTO postBankAccountDTO) {
@@ -59,4 +59,18 @@ public class BankAccountService {
     return bankAccountTransformer.convertToDto(bankAccountCreated);
   }
 
+  public GETBankBalanceDTO getBankBalance(Long bankAccountId) {
+
+    BankAccount bankAccount = getBankAccountFromRepository(bankAccountId);
+
+    return bankBalanceTransformer.convertToDto(bankAccount);
+  }
+
+  private BankAccount getBankAccountFromRepository(Long bankAccountId) {
+    LOGGER.info("Find bank account with id: " + bankAccountId);
+
+    Optional<BankAccount> bankAccount = bankAccountRepository.findBankAccountById(bankAccountId);
+
+    return bankAccount.orElseThrow(ResourceNotFoundException::new);
+  }
 }

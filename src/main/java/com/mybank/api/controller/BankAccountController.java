@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.mybank.api.controller.validator.BankAccountValidator;
 import com.mybank.api.model.dto.bankaccount.GETBankAccountDTO;
 import com.mybank.api.model.dto.bankaccount.POSTBankAccountDTO;
+import com.mybank.api.model.dto.bankbalance.GETBankBalanceDTO;
 import com.mybank.api.service.BankAccountService;
 
 @RestController
@@ -28,7 +29,7 @@ public class BankAccountController extends BaseController {
     return bankAccountService.getAllBankAccounts();
   }
 
-  @GetMapping(value = "{bankAccountId}")
+  @GetMapping(value = "/{bankAccountId}")
   public GETBankAccountDTO getBankAccount(@PathVariable Long bankAccountId) {
 
     return bankAccountService.getBankAccount(bankAccountId);
@@ -40,5 +41,11 @@ public class BankAccountController extends BaseController {
 
     BankAccountValidator.validateRequest(body);
     return bankAccountService.createBankAccount(body);
+  }
+
+  @GetMapping(value = "/{bankAccountId}/balance")
+  public GETBankBalanceDTO getBankBalance(@PathVariable Long bankAccountId) {
+
+    return bankAccountService.getBankBalance(bankAccountId);
   }
 }
