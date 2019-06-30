@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.mybank.api.dao.model.BankAccount;
 import com.mybank.api.dao.repository.BankAccountRepository;
+import com.mybank.api.exception.InternalServerException;
 import com.mybank.api.exception.ResourceNotFoundException;
 import com.mybank.api.model.dto.bankaccount.GETBankAccountDTO;
 import com.mybank.api.model.dto.bankaccount.POSTBankAccountDTO;
@@ -51,14 +52,20 @@ public class BankAccountService {
   }
 
   public GETBankAccountDTO createBankAccount(POSTBankAccountDTO postBankAccountDTO) {
-    LOGGER.info("Creating new bank account...");
+    try {
+      LOGGER.info("Creating new bank account...");
 
-    BankAccount bankAccount = bankAccountTransformer.convertToEntity(postBankAccountDTO);
-    BankAccount bankAccountCreated = bankAccountRepository.save(bankAccount);
+      BankAccount bankAccount = bankAccountTransformer.convertToEntity(postBankAccountDTO);
+      BankAccount bankAccountCreated = bankAccountRepository.save(bankAccount);
 
-    LOGGER.info("New bank account created with id: " + bankAccountCreated.getId());
+      LOGGER.info("New bank account created with id: " + bankAccountCreated.getId());
 
-    return bankAccountTransformer.convertToDto(bankAccountCreated);
+      return bankAccountTransformer.convertToDto(bankAccountCreated);
+
+    } catch (Exception ex) {
+      LOGGER.error("Bank account creation fail: ", ex);
+      throw new InternalServerException("Bank account creation fail. Please contact support service.");
+    }
   }
 
   public GETBankBalanceDTO getBankBalance(Long bankAccountId) {

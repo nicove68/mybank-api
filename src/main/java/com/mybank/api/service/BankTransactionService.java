@@ -17,6 +17,7 @@ import com.mybank.api.dao.model.BankTransaction;
 import com.mybank.api.dao.repository.BankAccountRepository;
 import com.mybank.api.dao.repository.BankTransactionRepository;
 import com.mybank.api.exception.BadRequestException;
+import com.mybank.api.exception.InternalServerException;
 import com.mybank.api.model.dto.banktransaction.GETBankTransactionDTO;
 import com.mybank.api.model.dto.banktransaction.POSTBankTransactionDTO;
 import com.mybank.api.transformer.BankTransactionTransformer;
@@ -61,21 +62,33 @@ public class BankTransactionService {
   }
 
   private GETBankTransactionDTO depositAmountTransaction(POSTBankTransactionDTO postBankTransactionDTO, BankAccount bankAccount) {
-    BigDecimal newBalance = bankAccount.getBalance().add(postBankTransactionDTO.getAmount());
-    updateBankAccountBalance(bankAccount, newBalance);
+    try {
+      BigDecimal newBalance = bankAccount.getBalance().add(postBankTransactionDTO.getAmount());
+      updateBankAccountBalance(bankAccount, newBalance);
 
-    return saveBankTransaction(postBankTransactionDTO, bankAccount);
+      return saveBankTransaction(postBankTransactionDTO, bankAccount);
+
+    } catch (Exception ex) {
+      LOGGER.error("Deposit transaction fail: ", ex);
+      throw new InternalServerException("Deposit transaction fail. Please contact support service.");
+    }
   }
 
   private GETBankTransactionDTO withdrawAmountTransaction(POSTBankTransactionDTO postBankTransactionDTO, BankAccount bankAccount) {
-    BigDecimal newBalance = bankAccount.getBalance().subtract(postBankTransactionDTO.getAmount());
+    try {
+      BigDecimal newBalance = bankAccount.getBalance().subtract(postBankTransactionDTO.getAmount());
 
-    if (!isSecureWithdraw(bankAccount, newBalance))
-      throw new BadRequestException("Bank account not have sufficient funds for the transaction.");
+      if (!isSecureWithdraw(bankAccount, newBalance))
+        throw new BadRequestException("Bank account not have sufficient funds for the transaction.");
 
-    updateBankAccountBalance(bankAccount, newBalance);
+      updateBankAccountBalance(bankAccount, newBalance);
 
-    return saveBankTransaction(postBankTransactionDTO, bankAccount);
+      return saveBankTransaction(postBankTransactionDTO, bankAccount);
+
+    } catch (Exception ex) {
+      LOGGER.error("Withdraw transaction fail: ", ex);
+      throw new InternalServerException("Withdraw transaction fail. Please contact support service.");
+    }
   }
 
   private GETBankTransactionDTO saveBankTransaction(POSTBankTransactionDTO postBankTransactionDTO, BankAccount bankAccount) {
