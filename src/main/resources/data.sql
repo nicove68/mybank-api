@@ -9,7 +9,7 @@ CREATE TABLE bank_account (
 
 INSERT INTO bank_account (id, alias, type, balance) VALUES
     (1, 'messi', 'BLACK', 80999.45),
-    (2, 'ronaldo', 'STANDARD', 134.00),
+    (2, 'ronaldo', 'STANDARD', 0),
     (3, 'pogba', 'PLATINUM', 3007.77);
 
 

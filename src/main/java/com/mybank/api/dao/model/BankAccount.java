@@ -28,6 +28,13 @@ public class BankAccount {
     this.balance = balance;
   }
 
+  public BankAccount(BankAccount bankAccount, BigDecimal balance) {
+    this.id = bankAccount.getId();
+    this.alias = bankAccount.getAlias();
+    this.type = bankAccount.getType();
+    this.balance = balance;
+  }
+
   public Long getId() {
     return id;
   }
