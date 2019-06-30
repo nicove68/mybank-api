@@ -4,8 +4,6 @@ package com.mybank.api.configuration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.ehcache.CacheManager;
-import org.ehcache.config.builders.CacheManagerBuilder;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,11 +37,6 @@ public class ApiConfiguration implements WebMvcConfigurer {
   @Bean
   public ExecutorService executorService() {
     return Executors.newCachedThreadPool();
-  }
-
-  @Bean
-  public CacheManager cacheManager() {
-    return CacheManagerBuilder.newCacheManagerBuilder().build(true);
   }
 
   @Bean

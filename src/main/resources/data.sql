@@ -30,3 +30,5 @@ INSERT INTO bank_transaction (account_id, date, type, amount) VALUES
     (1, '2010-01-01T16:00:00Z', 'WITHDRAW', 90),
     (1, '2010-01-01T16:00:00Z', 'DEPOSIT', 99),
     (1, '2010-01-01T16:00:00Z', 'DEPOSIT', 0.45);
+
+CREATE INDEX idx_account ON bank_transaction (account_id);
