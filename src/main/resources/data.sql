@@ -25,8 +25,8 @@ CREATE TABLE bank_transaction (
 );
 
 INSERT INTO bank_transaction (account_id, date, type, amount) VALUES
-    (1, '2010-01-01T16:00:00.000Z', 'DEPOSIT', 80000),
-    (1, '2010-01-01T16:00:00.000Z', 'DEPOSIT', 990),
-    (1, '2010-01-01T16:00:00.000Z', 'WITHDRAW', 90),
-    (1, '2010-01-01T16:00:00.000Z', 'DEPOSIT', 99),
-    (1, '2010-01-01T16:00:00.000Z', 'DEPOSIT', 0.45);
+    (1, '2010-01-01T16:00:00Z', 'DEPOSIT', 80000),
+    (1, '2010-01-01T16:00:00Z', 'DEPOSIT', 990),
+    (1, '2010-01-01T16:00:00Z', 'WITHDRAW', 90),
+    (1, '2010-01-01T16:00:00Z', 'DEPOSIT', 99),
+    (1, '2010-01-01T16:00:00Z', 'DEPOSIT', 0.45);

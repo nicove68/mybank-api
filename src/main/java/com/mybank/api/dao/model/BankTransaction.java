@@ -33,7 +33,8 @@ public class BankTransaction {
     this.amount = amount;
   }
 
-  public BankTransaction(BankTransaction bankTransaction, String date) {
+  public BankTransaction(BankAccount account, String date, BankTransaction bankTransaction) {
+    this.account = account;
     this.date = date;
     this.type = bankTransaction.getType();
     this.amount = bankTransaction.getAmount();

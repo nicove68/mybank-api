@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mybank.api.dao.model.BankAccount;
 import com.mybank.api.dao.model.BankTransaction;
 import com.mybank.api.dao.repository.BankTransactionRepository;
 import com.mybank.api.model.dto.banktransaction.GETBankTransactionDTO;
@@ -20,11 +21,13 @@ public class BankTransactionService {
   private static Logger LOGGER = LoggerFactory.getLogger(BankTransactionService.class);
   private BankTransactionRepository bankTransactionRepository;
   private BankTransactionTransformer bankTransactionTransformer;
+  private BankAccountService bankAccountService;
 
   @Autowired
-  public BankTransactionService(BankTransactionRepository bankTransactionRepository, BankTransactionTransformer bankTransactionTransformer) {
+  public BankTransactionService(BankTransactionRepository bankTransactionRepository, BankTransactionTransformer bankTransactionTransformer, BankAccountService bankAccountService) {
     this.bankTransactionRepository = bankTransactionRepository;
     this.bankTransactionTransformer = bankTransactionTransformer;
+    this.bankAccountService = bankAccountService;
   }
 
   public List<GETBankTransactionDTO> getBankTransactionsFromAccount(Long bankAccountId) {
@@ -40,7 +43,10 @@ public class BankTransactionService {
   public GETBankTransactionDTO createBankTransaction(Long bankAccountId, POSTBankTransactionDTO postBankTransactionDTO) {
     LOGGER.info("Creating new bank transaction for bank account id: " + bankAccountId);
 
-    BankTransaction bankTransaction = bankTransactionTransformer.convertToEntity(postBankTransactionDTO);
+    BankAccount bankAccount = bankAccountService.getBankAccountFromRepository(bankAccountId);
+    // TODO: validar si el balance es 0 cero
+
+    BankTransaction bankTransaction = bankTransactionTransformer.convertToEntity(postBankTransactionDTO, bankAccount);
     BankTransaction bankTransactionCreated = bankTransactionRepository.save(bankTransaction);
 
     LOGGER.info("New bank transaction created with id: " + bankTransactionCreated.getId());

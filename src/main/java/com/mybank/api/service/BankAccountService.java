@@ -68,7 +68,7 @@ public class BankAccountService {
     return bankBalanceTransformer.convertToDto(bankAccount);
   }
 
-  private BankAccount getBankAccountFromRepository(Long bankAccountId) {
+  public BankAccount getBankAccountFromRepository(Long bankAccountId) {
     LOGGER.info("Find bank account with id: " + bankAccountId);
 
     Optional<BankAccount> bankAccount = bankAccountRepository.findBankAccountById(bankAccountId);

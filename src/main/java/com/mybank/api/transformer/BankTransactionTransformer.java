@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.mybank.api.dao.model.BankAccount;
 import com.mybank.api.dao.model.BankTransaction;
 import com.mybank.api.model.dto.banktransaction.GETBankTransactionDTO;
 import com.mybank.api.model.dto.banktransaction.POSTBankTransactionDTO;
@@ -24,9 +25,10 @@ public class BankTransactionTransformer {
 		return modelMapper.map(bankTransaction, GETBankTransactionDTO.class);
 	}
 
-	public BankTransaction convertToEntity(POSTBankTransactionDTO bankTransactionDTO) {
+	public BankTransaction convertToEntity(POSTBankTransactionDTO bankTransactionDTO, BankAccount bankAccount) {
 		BankTransaction bankTransaction = modelMapper.map(bankTransactionDTO, BankTransaction.class);
 		String now = LocalDateTime.now().format(dateTimeFormatter);
-		return new BankTransaction(bankTransaction, now);
+
+		return new BankTransaction(bankAccount, now, bankTransaction);
 	}
 }
