@@ -33,6 +33,12 @@ public class BankTransaction {
     this.amount = amount;
   }
 
+  public BankTransaction(BankTransaction bankTransaction, String date) {
+    this.date = date;
+    this.type = bankTransaction.getType();
+    this.amount = bankTransaction.getAmount();
+  }
+
   public Long getId() {
     return id;
   }

@@ -38,7 +38,9 @@ public class BankAccountService {
 
     List<BankAccount> bankAccountList = bankAccountRepository.findAll();
 
-    return bankAccountList.stream().map(bankAccountTransformer::convertToDto).collect(Collectors.toList());
+    return bankAccountList.stream()
+        .map(bankAccountTransformer::convertToDto)
+        .collect(Collectors.toList());
   }
 
   public GETBankAccountDTO getBankAccount(Long bankAccountId) {

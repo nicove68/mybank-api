@@ -11,9 +11,9 @@ import com.mybank.api.model.dto.bankaccount.POSTBankAccountDTO;
 @Component
 public class BankAccountValidator {
 
-	public static void validateRequest(POSTBankAccountDTO request) {
-		if(StringUtils.isEmpty(request.getAlias())) throw new BadRequestException("The field 'alias' is required.");
-		if(StringUtils.isEmpty(request.getType())) throw new BadRequestException("The field 'type' is required.");
-		if(!BankAccountType.contains(request.getType())) throw new BadRequestException("The field 'type' is incorrect.");
+	public static void validateAccount(POSTBankAccountDTO account) {
+		if(StringUtils.isEmpty(account.getAlias())) throw new BadRequestException("The field 'alias' is required.");
+		if(StringUtils.isEmpty(account.getType())) throw new BadRequestException("The field 'type' is required.");
+		if(!BankAccountType.contains(account.getType())) throw new BadRequestException("The field 'type' is incorrect.");
 	}
 }
