@@ -62,10 +62,10 @@ public class BankTransactionService {
   }
 
   private GETBankTransactionDTO depositAmountTransaction(POSTBankTransactionDTO postBankTransactionDTO, BankAccount bankAccount) {
-    try {
-      BigDecimal newBalance = bankAccount.getBalance().add(postBankTransactionDTO.getAmount());
-      updateBankAccountBalance(bankAccount, newBalance);
+    BigDecimal newBalance = bankAccount.getBalance().add(postBankTransactionDTO.getAmount());
 
+    try {
+      updateBankAccountBalance(bankAccount, newBalance);
       return saveBankTransaction(postBankTransactionDTO, bankAccount);
 
     } catch (Exception ex) {
@@ -75,14 +75,13 @@ public class BankTransactionService {
   }
 
   private GETBankTransactionDTO withdrawAmountTransaction(POSTBankTransactionDTO postBankTransactionDTO, BankAccount bankAccount) {
+    BigDecimal newBalance = bankAccount.getBalance().subtract(postBankTransactionDTO.getAmount());
+
+    if (!isSecureWithdraw(bankAccount, newBalance))
+      throw new BadRequestException("Bank account not have sufficient funds for the transaction.");
+
     try {
-      BigDecimal newBalance = bankAccount.getBalance().subtract(postBankTransactionDTO.getAmount());
-
-      if (!isSecureWithdraw(bankAccount, newBalance))
-        throw new BadRequestException("Bank account not have sufficient funds for the transaction.");
-
       updateBankAccountBalance(bankAccount, newBalance);
-
       return saveBankTransaction(postBankTransactionDTO, bankAccount);
 
     } catch (Exception ex) {
