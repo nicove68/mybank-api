@@ -12,7 +12,8 @@ INSERT INTO bank_account (id, alias, type, balance) VALUES
     (2, 'paul_mccartney', 'GOLD', 100.00),
     (3, 'tarja_turunen', 'PLATINUM', 0),
     (4, 'bruce_dickinson', 'STANDARD', -350.00),
-    (5, 'brian_johnson', 'PLATINUM', 100.00);
+    (5, 'brian_johnson', 'PLATINUM', 100.00),
+    (6, 'freddie_mercury', 'BLACK', 100.00);
 
 
 

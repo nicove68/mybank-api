@@ -5,6 +5,12 @@ import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -106,7 +112,86 @@ public class BankTransactionServiceTest {
 
   @Test
   public void when_execute_multi_concurrent_deposit_transactions_then_return_correct_balance() {
+    Long freddieMercuryBankAccountId = 6L;
+    ExecutorService executorService = Executors.newFixedThreadPool(3);
 
+
+    Callable<BankTransactionDTO> callableTask1 = () -> {
+      BigDecimal withdrawAmount = new BigDecimal(10.00).setScale(2, RoundingMode.DOWN);
+      BankTransactionDTO withdraw = createWithdraw(withdrawAmount);
+      return bankTransactionService.createBankTransaction(freddieMercuryBankAccountId, withdraw);
+    };
+
+    Callable<BankTransactionDTO> callableTask2 = () -> {
+      BigDecimal withdrawAmount = new BigDecimal(20.00).setScale(2, RoundingMode.DOWN);
+      BankTransactionDTO withdraw = createWithdraw(withdrawAmount);
+      return bankTransactionService.createBankTransaction(freddieMercuryBankAccountId, withdraw);
+    };
+
+    Callable<BankTransactionDTO> callableTask3 = () -> {
+      BigDecimal withdrawAmount = new BigDecimal(30.00).setScale(2, RoundingMode.DOWN);
+      BankTransactionDTO withdraw = createWithdraw(withdrawAmount);
+      return bankTransactionService.createBankTransaction(freddieMercuryBankAccountId, withdraw);
+    };
+
+    Callable<BankTransactionDTO> callableTask4 = () -> {
+      BigDecimal withdrawAmount = new BigDecimal(40.00).setScale(2, RoundingMode.DOWN);
+      BankTransactionDTO withdraw = createWithdraw(withdrawAmount);
+      return bankTransactionService.createBankTransaction(freddieMercuryBankAccountId, withdraw);
+    };
+
+    Callable<BankTransactionDTO> callableTask5 = () -> {
+      BigDecimal depositAmount = new BigDecimal(1.00).setScale(2, RoundingMode.DOWN);
+      BankTransactionDTO deposit = createDeposit(depositAmount);
+      return bankTransactionService.createBankTransaction(freddieMercuryBankAccountId, deposit);
+    };
+
+    Callable<BankTransactionDTO> callableTask6 = () -> {
+      BigDecimal depositAmount = new BigDecimal(2.00).setScale(2, RoundingMode.DOWN);
+      BankTransactionDTO deposit = createDeposit(depositAmount);
+      return bankTransactionService.createBankTransaction(freddieMercuryBankAccountId, deposit);
+    };
+
+    Callable<BankTransactionDTO> callableTask7 = () -> {
+      BigDecimal depositAmount = new BigDecimal(3.00).setScale(2, RoundingMode.DOWN);
+      BankTransactionDTO deposit = createDeposit(depositAmount);
+      return bankTransactionService.createBankTransaction(freddieMercuryBankAccountId, deposit);
+    };
+
+    Callable<BankTransactionDTO> callableTask8 = () -> {
+      BigDecimal depositAmount = new BigDecimal(4.00).setScale(2, RoundingMode.DOWN);
+      BankTransactionDTO deposit = createDeposit(depositAmount);
+      return bankTransactionService.createBankTransaction(freddieMercuryBankAccountId, deposit);
+    };
+
+    Callable<BankTransactionDTO> callableTask9 = () -> {
+      BigDecimal depositAmount = new BigDecimal(5.00).setScale(2, RoundingMode.DOWN);
+      BankTransactionDTO deposit = createDeposit(depositAmount);
+      return bankTransactionService.createBankTransaction(freddieMercuryBankAccountId, deposit);
+    };
+
+    List<Callable<BankTransactionDTO>> callableTasks = new ArrayList<>();
+    callableTasks.add(callableTask1);
+    callableTasks.add(callableTask2);
+    callableTasks.add(callableTask3);
+    callableTasks.add(callableTask4);
+    callableTasks.add(callableTask5);
+    callableTasks.add(callableTask6);
+    callableTasks.add(callableTask7);
+    callableTasks.add(callableTask8);
+    callableTasks.add(callableTask9);
+
+    try {
+      List<Future<BankTransactionDTO>> futures = executorService.invokeAll(callableTasks);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
+    BigDecimal actualBalance = bankAccountService.getBankAccount(freddieMercuryBankAccountId).getBalance();
+    Integer transactionsQuantity = bankTransactionService.getBankTransactionsFromAccount(freddieMercuryBankAccountId).size();
+
+    assertThat(actualBalance, comparesEqualTo(new BigDecimal(15.00).setScale(2, RoundingMode.DOWN)));
+    assertEquals(Integer.valueOf(9), transactionsQuantity);
   }
 
 
