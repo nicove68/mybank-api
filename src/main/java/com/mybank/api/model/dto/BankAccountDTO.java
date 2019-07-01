@@ -7,7 +7,7 @@ public class BankAccountDTO {
   private Long id;
   private String alias;
   private String type;
-  private BigDecimal balance;
+  private BigDecimal balance = BigDecimal.ZERO;
 
   public BankAccountDTO() {
   }

@@ -5,6 +5,7 @@ import static com.mybank.api.model.entity.BankTransactionType.WITHDRAW;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -27,6 +28,8 @@ public class BankTransactionService {
   private BankTransactionRepository bankTransactionRepository;
   private BankTransactionTransformer bankTransactionTransformer;
   private BankAccountService bankAccountService;
+  private final ReentrantLock lock = new ReentrantLock();
+
 
   @Autowired
   public BankTransactionService(BankTransactionRepository bankTransactionRepository, BankTransactionTransformer bankTransactionTransformer, BankAccountService bankAccountService) {
@@ -45,16 +48,22 @@ public class BankTransactionService {
         .collect(Collectors.toList());
   }
 
-  public synchronized BankTransactionDTO createBankTransaction(Long bankAccountId, BankTransactionDTO bankTransactionDTO) {
-    BankAccount bankAccount = bankAccountService.getBankAccountFromRepository(bankAccountId);
+  public BankTransactionDTO createBankTransaction(Long bankAccountId, BankTransactionDTO bankTransactionDTO) {
+    lock.lock();
+    try {
+      BankAccount bankAccount = bankAccountService.getBankAccountFromRepository(bankAccountId);
 
-    if(bankTransactionDTO.getType().equalsIgnoreCase(DEPOSIT.name()))
-      return depositAmountTransaction(bankTransactionDTO, bankAccount);
+      if(bankTransactionDTO.getType().equalsIgnoreCase(DEPOSIT.name()))
+        return depositAmountTransaction(bankTransactionDTO, bankAccount);
 
-    if(bankTransactionDTO.getType().equalsIgnoreCase(WITHDRAW.name()))
-      return withdrawAmountTransaction(bankTransactionDTO, bankAccount);
+      if(bankTransactionDTO.getType().equalsIgnoreCase(WITHDRAW.name()))
+        return withdrawAmountTransaction(bankTransactionDTO, bankAccount);
 
-    throw new BadRequestException("No actions for transaction type: " + bankTransactionDTO.getType());
+      throw new BadRequestException("No actions for transaction type: " + bankTransactionDTO.getType());
+
+    } finally {
+      lock.unlock();
+    }
   }
 
   private BankTransactionDTO depositAmountTransaction(BankTransactionDTO bankTransactionDTO, BankAccount bankAccount) {
