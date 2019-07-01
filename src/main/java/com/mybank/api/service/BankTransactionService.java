@@ -17,7 +17,6 @@ import com.mybank.api.exception.InternalServerException;
 import com.mybank.api.model.dto.BankTransactionDTO;
 import com.mybank.api.model.entity.BankAccount;
 import com.mybank.api.model.entity.BankTransaction;
-import com.mybank.api.repository.BankAccountRepository;
 import com.mybank.api.repository.BankTransactionRepository;
 import com.mybank.api.transformer.BankTransactionTransformer;
 
@@ -26,14 +25,12 @@ public class BankTransactionService {
 
   private static Logger LOGGER = LoggerFactory.getLogger(BankTransactionService.class);
   private BankTransactionRepository bankTransactionRepository;
-  private BankAccountRepository bankAccountRepository;
   private BankTransactionTransformer bankTransactionTransformer;
   private BankAccountService bankAccountService;
 
   @Autowired
-  public BankTransactionService(BankTransactionRepository bankTransactionRepository, BankAccountRepository bankAccountRepository, BankTransactionTransformer bankTransactionTransformer, BankAccountService bankAccountService) {
+  public BankTransactionService(BankTransactionRepository bankTransactionRepository, BankTransactionTransformer bankTransactionTransformer, BankAccountService bankAccountService) {
     this.bankTransactionRepository = bankTransactionRepository;
-    this.bankAccountRepository = bankAccountRepository;
     this.bankTransactionTransformer = bankTransactionTransformer;
     this.bankAccountService = bankAccountService;
   }
@@ -100,7 +97,7 @@ public class BankTransactionService {
 
   private void updateBankAccountBalance(BankAccount bankAccount, BigDecimal newBalance) {
     BankAccount bankAccountUpdated = new BankAccount(bankAccount, newBalance);
-    bankAccountRepository.save(bankAccountUpdated);
+    bankAccountService.updateBankAccount(bankAccountUpdated);
     LOGGER.info("Balance updated on bank account id: " + bankAccount.getId());
   }
 

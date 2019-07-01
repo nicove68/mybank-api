@@ -74,6 +74,12 @@ public class BankAccountService {
     return bankBalanceTransformer.convertToDto(bankAccount);
   }
 
+  public void updateBankAccount(BankAccount bankAccountUpdated) {
+    LOGGER.info("Updating bank account id: " + bankAccountUpdated.getId());
+
+    bankAccountRepository.save(bankAccountUpdated);
+  }
+
   public BankAccount getBankAccountFromRepository(Long bankAccountId) {
     LOGGER.info("Find bank account with id: " + bankAccountId);
 
