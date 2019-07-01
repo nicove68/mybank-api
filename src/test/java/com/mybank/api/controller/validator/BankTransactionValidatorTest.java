@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.mybank.api.exception.BadRequestException;
-import com.mybank.api.model.dto.banktransaction.POSTBankTransactionDTO;
+import com.mybank.api.model.dto.BankTransactionDTO;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -16,23 +16,23 @@ public class BankTransactionValidatorTest {
 
   @Test(expected = BadRequestException.class)
   public void when_transaction_type_is_incomplete_then_return_bad_request_exeption() {
-    POSTBankTransactionDTO transaction = createIncompleteTransaction();
+    BankTransactionDTO transaction = createIncompleteTransaction();
 
     BankTransactionValidator.validateTransaction(transaction);
   }
 
   @Test(expected = BadRequestException.class)
   public void when_transaction_amount_is_negative_then_return_bad_request_exeption() {
-    POSTBankTransactionDTO transaction = createNegativeTransaction();
+    BankTransactionDTO transaction = createNegativeTransaction();
 
     BankTransactionValidator.validateTransaction(transaction);
   }
 
-  private POSTBankTransactionDTO createIncompleteTransaction() {
-    return new POSTBankTransactionDTO(null, BigDecimal.TEN);
+  private BankTransactionDTO createIncompleteTransaction() {
+    return new BankTransactionDTO(null, BigDecimal.TEN);
   }
 
-  private POSTBankTransactionDTO createNegativeTransaction() {
-    return new POSTBankTransactionDTO("WITHDRAW", new BigDecimal(-10));
+  private BankTransactionDTO createNegativeTransaction() {
+    return new BankTransactionDTO("WITHDRAW", new BigDecimal(-10));
   }
 }

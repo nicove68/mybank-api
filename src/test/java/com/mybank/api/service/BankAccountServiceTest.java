@@ -11,12 +11,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.mybank.api.dao.repository.BankAccountRepository;
-import com.mybank.api.dao.repository.BankTransactionRepository;
+import com.mybank.api.repository.BankAccountRepository;
+import com.mybank.api.repository.BankTransactionRepository;
 import com.mybank.api.exception.ResourceNotFoundException;
-import com.mybank.api.transformer.BankAccountTransformer;
-import com.mybank.api.transformer.BankBalanceTransformer;
-import com.mybank.api.transformer.BankTransactionTransformer;
 
 
 @RunWith(MockitoJUnitRunner.class)

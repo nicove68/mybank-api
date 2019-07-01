@@ -1,4 +1,4 @@
-package com.mybank.api.dao.model;
+package com.mybank.api.model.entity;
 
 public enum BankTransactionType {
   DEPOSIT, WITHDRAW, TRANSFER;

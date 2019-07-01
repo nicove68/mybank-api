@@ -1,20 +1,25 @@
-package com.mybank.api.model.dto.banktransaction;
+package com.mybank.api.model.dto;
 
 import java.math.BigDecimal;
 
-public class GETBankTransactionDTO {
+public class BankTransactionDTO {
 
   private Long id;
   private String date;
   private String type;
   private BigDecimal amount;
 
-  public GETBankTransactionDTO() {
+  public BankTransactionDTO() {
   }
 
-  public GETBankTransactionDTO(Long id, String date, String type, BigDecimal amount) {
+  public BankTransactionDTO(Long id, String date, String type, BigDecimal amount) {
     this.id = id;
     this.date = date;
+    this.type = type;
+    this.amount = amount;
+  }
+
+  public BankTransactionDTO(String type, BigDecimal amount) {
     this.type = type;
     this.amount = amount;
   }

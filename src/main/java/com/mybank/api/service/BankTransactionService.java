@@ -1,7 +1,7 @@
 package com.mybank.api.service;
 
-import static com.mybank.api.dao.model.BankTransactionType.DEPOSIT;
-import static com.mybank.api.dao.model.BankTransactionType.WITHDRAW;
+import static com.mybank.api.model.entity.BankTransactionType.DEPOSIT;
+import static com.mybank.api.model.entity.BankTransactionType.WITHDRAW;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,14 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mybank.api.dao.model.BankAccount;
-import com.mybank.api.dao.model.BankTransaction;
-import com.mybank.api.dao.repository.BankAccountRepository;
-import com.mybank.api.dao.repository.BankTransactionRepository;
 import com.mybank.api.exception.BadRequestException;
 import com.mybank.api.exception.InternalServerException;
-import com.mybank.api.model.dto.banktransaction.GETBankTransactionDTO;
-import com.mybank.api.model.dto.banktransaction.POSTBankTransactionDTO;
+import com.mybank.api.model.dto.BankTransactionDTO;
+import com.mybank.api.model.entity.BankAccount;
+import com.mybank.api.model.entity.BankTransaction;
+import com.mybank.api.repository.BankAccountRepository;
+import com.mybank.api.repository.BankTransactionRepository;
 import com.mybank.api.transformer.BankTransactionTransformer;
 
 @Service
@@ -39,7 +38,7 @@ public class BankTransactionService {
     this.bankAccountService = bankAccountService;
   }
 
-  public List<GETBankTransactionDTO> getBankTransactionsFromAccount(Long bankAccountId) {
+  public List<BankTransactionDTO> getBankTransactionsFromAccount(Long bankAccountId) {
     LOGGER.info("Getting all bank transactions from account id: " + bankAccountId);
 
     List<BankTransaction> bankTransactionList = bankTransactionRepository.findBankTransactionsByAccountId(bankAccountId);
@@ -49,24 +48,24 @@ public class BankTransactionService {
         .collect(Collectors.toList());
   }
 
-  public GETBankTransactionDTO createBankTransaction(Long bankAccountId, POSTBankTransactionDTO postBankTransactionDTO) {
+  public synchronized BankTransactionDTO createBankTransaction(Long bankAccountId, BankTransactionDTO bankTransactionDTO) {
     BankAccount bankAccount = bankAccountService.getBankAccountFromRepository(bankAccountId);
 
-    if(postBankTransactionDTO.getType().equalsIgnoreCase(DEPOSIT.name()))
-      return depositAmountTransaction(postBankTransactionDTO, bankAccount);
+    if(bankTransactionDTO.getType().equalsIgnoreCase(DEPOSIT.name()))
+      return depositAmountTransaction(bankTransactionDTO, bankAccount);
 
-    if(postBankTransactionDTO.getType().equalsIgnoreCase(WITHDRAW.name()))
-      return withdrawAmountTransaction(postBankTransactionDTO, bankAccount);
+    if(bankTransactionDTO.getType().equalsIgnoreCase(WITHDRAW.name()))
+      return withdrawAmountTransaction(bankTransactionDTO, bankAccount);
 
-    throw new BadRequestException("No actions for transaction type: " + postBankTransactionDTO.getType());
+    throw new BadRequestException("No actions for transaction type: " + bankTransactionDTO.getType());
   }
 
-  private GETBankTransactionDTO depositAmountTransaction(POSTBankTransactionDTO postBankTransactionDTO, BankAccount bankAccount) {
-    BigDecimal newBalance = bankAccount.getBalance().add(postBankTransactionDTO.getAmount());
+  private BankTransactionDTO depositAmountTransaction(BankTransactionDTO bankTransactionDTO, BankAccount bankAccount) {
+    BigDecimal newBalance = bankAccount.getBalance().add(bankTransactionDTO.getAmount());
 
     try {
       updateBankAccountBalance(bankAccount, newBalance);
-      return saveBankTransaction(postBankTransactionDTO, bankAccount);
+      return saveBankTransaction(bankTransactionDTO, bankAccount);
 
     } catch (Exception ex) {
       LOGGER.error("Deposit transaction fail: ", ex);
@@ -74,15 +73,15 @@ public class BankTransactionService {
     }
   }
 
-  private GETBankTransactionDTO withdrawAmountTransaction(POSTBankTransactionDTO postBankTransactionDTO, BankAccount bankAccount) {
-    BigDecimal newBalance = bankAccount.getBalance().subtract(postBankTransactionDTO.getAmount());
+  private BankTransactionDTO withdrawAmountTransaction(BankTransactionDTO bankTransactionDTO, BankAccount bankAccount) {
+    BigDecimal newBalance = bankAccount.getBalance().subtract(bankTransactionDTO.getAmount());
 
     if (!isSecureWithdraw(bankAccount, newBalance))
       throw new BadRequestException("Bank account not have sufficient funds for the transaction.");
 
     try {
       updateBankAccountBalance(bankAccount, newBalance);
-      return saveBankTransaction(postBankTransactionDTO, bankAccount);
+      return saveBankTransaction(bankTransactionDTO, bankAccount);
 
     } catch (Exception ex) {
       LOGGER.error("Withdraw transaction fail: ", ex);
@@ -90,11 +89,11 @@ public class BankTransactionService {
     }
   }
 
-  private GETBankTransactionDTO saveBankTransaction(POSTBankTransactionDTO postBankTransactionDTO, BankAccount bankAccount) {
-    BankTransaction bankTransaction = bankTransactionTransformer.convertToEntity(postBankTransactionDTO, bankAccount);
+  private BankTransactionDTO saveBankTransaction(BankTransactionDTO bankTransactionDTO, BankAccount bankAccount) {
+    BankTransaction bankTransaction = bankTransactionTransformer.convertToEntity(bankTransactionDTO, bankAccount);
     BankTransaction bankTransactionCreated = bankTransactionRepository.save(bankTransaction);
 
-    LOGGER.info("New bank transaction type " + postBankTransactionDTO.getType() + " created on bank account id: " + bankAccount.getId());
+    LOGGER.info("New bank transaction type " + bankTransactionDTO.getType() + " created on bank account id: " + bankAccount.getId());
 
     return bankTransactionTransformer.convertToDto(bankTransactionCreated);
   }

@@ -4,9 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.mybank.api.dao.model.BankAccount;
-import com.mybank.api.model.dto.bankaccount.GETBankAccountDTO;
-import com.mybank.api.model.dto.bankaccount.POSTBankAccountDTO;
+import com.mybank.api.model.dto.BankAccountDTO;
+import com.mybank.api.model.entity.BankAccount;
 
 
 @Component
@@ -15,11 +14,11 @@ public class BankAccountTransformer {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	public GETBankAccountDTO convertToDto(BankAccount bankAccount) {
-		return modelMapper.map(bankAccount, GETBankAccountDTO.class);
+	public BankAccountDTO convertToDto(BankAccount bankAccount) {
+		return modelMapper.map(bankAccount, BankAccountDTO.class);
 	}
 
-	public BankAccount convertToEntity(POSTBankAccountDTO bankAccountDTO) {
+	public BankAccount convertToEntity(BankAccountDTO bankAccountDTO) {
 		return modelMapper.map(bankAccountDTO, BankAccount.class);
 	}
 }

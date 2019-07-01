@@ -14,8 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.mybank.api.exception.BadRequestException;
-import com.mybank.api.model.dto.banktransaction.GETBankTransactionDTO;
-import com.mybank.api.model.dto.banktransaction.POSTBankTransactionDTO;
+import com.mybank.api.model.dto.BankTransactionDTO;
 
 
 @RunWith(SpringRunner.class)
@@ -44,8 +43,8 @@ public class BankTransactionServiceTest {
     assertEquals(Integer.valueOf(0), actualTransactionsQuantity);
 
     BigDecimal depositAmount = new BigDecimal(30.55).setScale(2, RoundingMode.DOWN);
-    POSTBankTransactionDTO deposit = createDeposit(depositAmount);
-    GETBankTransactionDTO transaction = bankTransactionService.createBankTransaction(axlRoseBankAccountId, deposit);
+    BankTransactionDTO deposit = createDeposit(depositAmount);
+    BankTransactionDTO transaction = bankTransactionService.createBankTransaction(axlRoseBankAccountId, deposit);
 
     assertNotNull(transaction);
 
@@ -66,8 +65,8 @@ public class BankTransactionServiceTest {
     assertEquals(Integer.valueOf(0), actualTransactionsQuantity);
 
     BigDecimal withdrawAmount = new BigDecimal(10.30).setScale(2, RoundingMode.DOWN);
-    POSTBankTransactionDTO withdraw = createWithdraw(withdrawAmount);
-    GETBankTransactionDTO transaction = bankTransactionService.createBankTransaction(paulMccartneyBankAccountId, withdraw);
+    BankTransactionDTO withdraw = createWithdraw(withdrawAmount);
+    BankTransactionDTO transaction = bankTransactionService.createBankTransaction(paulMccartneyBankAccountId, withdraw);
 
     assertNotNull(transaction);
 
@@ -83,8 +82,8 @@ public class BankTransactionServiceTest {
     Long tarjaTurunenBankAccountId = 3L;
 
     BigDecimal withdrawAmount = new BigDecimal(10.30).setScale(2, RoundingMode.DOWN);
-    POSTBankTransactionDTO withdraw = createWithdraw(withdrawAmount);
-    GETBankTransactionDTO transaction = bankTransactionService.createBankTransaction(tarjaTurunenBankAccountId, withdraw);
+    BankTransactionDTO withdraw = createWithdraw(withdrawAmount);
+    BankTransactionDTO transaction = bankTransactionService.createBankTransaction(tarjaTurunenBankAccountId, withdraw);
   }
 
   @Test(expected = BadRequestException.class)
@@ -92,8 +91,8 @@ public class BankTransactionServiceTest {
     Long bruceDickinsonBankAccountId = 4L;
 
     BigDecimal withdrawAmount = new BigDecimal(10.30).setScale(2, RoundingMode.DOWN);
-    POSTBankTransactionDTO withdraw = createWithdraw(withdrawAmount);
-    GETBankTransactionDTO transaction = bankTransactionService.createBankTransaction(bruceDickinsonBankAccountId, withdraw);
+    BankTransactionDTO withdraw = createWithdraw(withdrawAmount);
+    BankTransactionDTO transaction = bankTransactionService.createBankTransaction(bruceDickinsonBankAccountId, withdraw);
   }
 
   @Test(expected = BadRequestException.class)
@@ -101,8 +100,8 @@ public class BankTransactionServiceTest {
     Long brianJohnsonBankAccountId = 5L;
 
     BigDecimal withdrawAmount = new BigDecimal(5000.00).setScale(2, RoundingMode.DOWN);
-    POSTBankTransactionDTO withdraw = createWithdraw(withdrawAmount);
-    GETBankTransactionDTO transaction = bankTransactionService.createBankTransaction(brianJohnsonBankAccountId, withdraw);
+    BankTransactionDTO withdraw = createWithdraw(withdrawAmount);
+    BankTransactionDTO transaction = bankTransactionService.createBankTransaction(brianJohnsonBankAccountId, withdraw);
   }
 
   @Test
@@ -111,11 +110,11 @@ public class BankTransactionServiceTest {
   }
 
 
-  private POSTBankTransactionDTO createDeposit(BigDecimal amount) {
-    return new POSTBankTransactionDTO("DEPOSIT", amount);
+  private BankTransactionDTO createDeposit(BigDecimal amount) {
+    return new BankTransactionDTO("DEPOSIT", amount);
   }
 
-  private POSTBankTransactionDTO createWithdraw(BigDecimal amount) {
-    return new POSTBankTransactionDTO("WITHDRAW", amount);
+  private BankTransactionDTO createWithdraw(BigDecimal amount) {
+    return new BankTransactionDTO("WITHDRAW", amount);
   }
 }

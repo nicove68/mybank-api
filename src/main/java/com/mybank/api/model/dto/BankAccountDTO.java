@@ -1,18 +1,18 @@
-package com.mybank.api.model.dto.bankaccount;
+package com.mybank.api.model.dto;
 
 import java.math.BigDecimal;
 
-public class GETBankAccountDTO {
+public class BankAccountDTO {
 
   private Long id;
   private String alias;
   private String type;
   private BigDecimal balance;
 
-  public GETBankAccountDTO() {
+  public BankAccountDTO() {
   }
 
-  public GETBankAccountDTO(Long id, String alias, String type, BigDecimal balance) {
+  public BankAccountDTO(Long id, String alias, String type, BigDecimal balance) {
     this.id = id;
     this.alias = alias;
     this.type = type;
