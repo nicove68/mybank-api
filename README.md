@@ -61,7 +61,7 @@ $ mvn test
 ``` json
 {
     "alias" : "liomessi",
-    "type" : "STANDARD"
+    "type" : "BLACK"
 }
 ```
 
@@ -203,6 +203,8 @@ $ mvn test
 
 ## Todo
 
+List of possible improvements:
+
 - [ ] Securize API with user authentication
 - [ ] Write unit tests for all classes
 - [ ] Building a deployment process
@@ -211,7 +213,7 @@ $ mvn test
 
 ## Documentation
 
-Baeldung is my best friend.
+Baeldung is my best friend :D
 
 - [Entity to DTO using ModelMapper](https://www.baeldung.com/entity-to-and-from-dto-for-a-java-spring-application)
 - [H2 Database in memory](https://www.baeldung.com/spring-boot-h2-database)
